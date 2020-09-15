@@ -20,7 +20,24 @@ async def join(ctx):
     channel = voice_state.channel
 
     await channel.connect()
-#     print("connected to:",channel.name)
+    
+    """指定された音声ファイルを流します。"""
+    voice_client = ctx.message.guild.voice_client
+
+    if not voice_client:
+        await ctx.send("Botはこのサーバーのボイスチャンネルに参加していません。")
+        return
+
+    if not ctx.message.attachments:
+        await ctx.send("ファイルが添付されていません。")
+        return
+
+    await ctx.message.attachments[0].save("temp.mp3")
+
+    ffmpeg_audio_source = discord.FFmpegPCMAudio("temp.mp3")
+    voice_client.play(ffmpeg_audio_source)
+
+    await ctx.send("再生しました。")
     
 @bot.command(aliases=["disconnect","bye"])
 async def leave(ctx):
@@ -33,12 +50,6 @@ async def leave(ctx):
 
     await voice_client.disconnect()
     await ctx.send("ボイスチャンネルから切断しました。")
-
-@bot.event
-async def on_command_error(ctx, error):
-    orig_error = getattr(error, "original", error)
-    error_msg = ''.join(traceback.TracebackException.from_exception(orig_error).format())
-    await ctx.send(error_msg)
 
 
 @bot.command()
