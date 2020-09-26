@@ -8,7 +8,7 @@ token = os.environ['DISCORD_BOT_TOKEN']
 if not discord.opus.is_loaded():
     discord.opus.load_opus("heroku-buildpack-libopus")
     
-@bot.command(aliases=["connect","summon"]) #connectやsummonでも呼び出せる
+@bot.command(aliases=["connect","summon","kimorin"]) #connectやsummonでも呼び出せる
 async def join(ctx):
     """Botをボイスチャンネルに入室させます。"""
     voice_state = ctx.author.voice
@@ -39,7 +39,7 @@ async def join(ctx):
 
     await ctx.send("再生しました。")
     
-@bot.command(aliases=["disconnect","bye"])
+@bot.command(aliases=["dis","bye"])
 async def leave(ctx):
     """Botをボイスチャンネルから切断します。"""
     voice_client = ctx.message.guild.voice_client
